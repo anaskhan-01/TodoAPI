@@ -50,13 +50,13 @@ export const loginUser = async (req: Request, res: Response) => {
     return res.json({ msg: "Invalid credentials", status: "500" });
   }
 
-  res.json(userNameExist);
+  //res.json(userNameExist);
 
   const payload = {
-    id: userNameExist.name,
+    id: userNameExist._id,
   };
 
   // const token = await generateToken(payload);
 
-  res.json({ msg: "Login successful", status: "200" });
+  res.json({ msg: payload, status: "200" });
 };

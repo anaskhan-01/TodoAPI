@@ -1,10 +1,11 @@
 import express, { Request, Response } from "express";
 import { TUser } from "../types/User";
 import User from "../models/User";
-import { hashPassword } from "../utils/hashPassword";
+import { hashPassword, comparePassword } from "../utils/hashPassword";
+import { generateToken } from "../utils/jwt";
 
 const checkByUsername = async (username: Pick<TUser, "username">) => {
-  const userNameExist = await User.findOne({ username });
+  const userNameExist: TUser | null = await User.findOne({ username });
   return userNameExist;
 };
 
@@ -34,4 +35,28 @@ export const createUser = async (req: Request, res: Response) => {
 
 export const loginUser = async (req: Request, res: Response) => {
   const { username, password } = req.body;
+
+  const userNameExist = await checkByUsername(username);
+  if (!userNameExist) {
+    return res.json({ msg: "Invalid credentials", status: "500" });
+  }
+
+  const isPasswordMatch = await comparePassword(
+    password,
+    userNameExist.password
+  );
+
+  if (!isPasswordMatch) {
+    return res.json({ msg: "Invalid credentials", status: "500" });
+  }
+
+  res.json(userNameExist);
+
+  const payload = {
+    id: userNameExist.name,
+  };
+
+  // const token = await generateToken(payload);
+
+  res.json({ msg: "Login successful", status: "200" });
 };

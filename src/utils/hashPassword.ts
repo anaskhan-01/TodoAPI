@@ -1,5 +1,9 @@
-import bycrypt from "bcrypt";
+import bcrypt from "bcrypt";
 
 export const hashPassword = (password: string, salt: number) => {
-  return bycrypt.hash(password, salt);
+  return bcrypt.hash(password, salt);
+};
+
+export const comparePassword = (password: string, hash: string) => {
+  return bcrypt.compare(password, hash);
 };

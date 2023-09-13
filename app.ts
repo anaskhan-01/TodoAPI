@@ -1,9 +1,9 @@
-import express, { Response, Request } from "express";
-import { connect } from "mongoose";
 import bodyParser from "body-parser";
-import Todo from "./src/models/Todo";
+import express from "express";
+import { connect } from "mongoose";
 import * as TodoController from "./src/controller/Todo.controller";
 import * as UserController from "./src/controller/User.controller";
+import authenticateToken from "./src/utils/tokenVefity";
 const connectDB = async () => {
   try {
     await connect(
@@ -21,7 +21,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.post("/add", TodoController.add);
+app.post("/add", authenticateToken, TodoController.add);
 app.get("/delete/:id", TodoController.deleteTodo);
 app.post("/update", TodoController.updateTodo);
 

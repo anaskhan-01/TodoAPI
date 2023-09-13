@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
+import jwt from "jsonwebtoken";
 import User from "../models/User";
 import { TUser } from "../types/User";
 import { comparePassword, hashPassword } from "../utils/hashPassword";
-import { generateToken } from "../utils/jwt";
-import jwt from "jsonwebtoken";
 
 const checkByUsername = async (username: Pick<TUser, "username">) => {
   const userNameExist: TUser | null = await User.findOne({ username });
@@ -52,14 +51,13 @@ export const loginUser = async (req: Request, res: Response) => {
   }
 
   //res.json(userNameExist);
-  const SECRET = "THISISMYSECRETKEY";
+  const SECRET = "your-secret-key";
   const payload = {
     _id: userNameExist._id,
+    name: userNameExist.name,
   };
 
-  const token = jwt.sign(payload, SECRET, {
-    expiresIn: "2 days",
-  });
+  const token = jwt.sign(payload, SECRET);
 
-  res.json({ token: token, status: "200" });
+  res.json({ token: token });
 };

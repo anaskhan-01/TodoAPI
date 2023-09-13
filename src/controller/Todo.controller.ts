@@ -6,9 +6,8 @@ export const checkTitle = async (title: string) => {
 };
 
 export const add = async (req: Request, res: Response) => {
-  const { title, description } = req.body;
-  const id = req.headers.authorization;
-  console.log("---------------", req.headers, id);
+  const { title, description, _id } = req.body;
+
   if (title === "") {
     return res.json({ msg: "Title cannot be empty", status: "500" });
   }
@@ -19,6 +18,7 @@ export const add = async (req: Request, res: Response) => {
   }
 
   let todo = {
+    userId: _id,
     title,
     description,
   };

@@ -16,7 +16,7 @@ function authenticateToken(
   if (!token) return res.status(401).send("Access denied");
 
   const payload: Payload | any = jwt.verify(token, secretKey);
-  req = payload._id;
+  req.body._id = payload._id;
   next();
 }
 

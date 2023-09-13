@@ -52,15 +52,14 @@ export const loginUser = async (req: Request, res: Response) => {
   }
 
   //res.json(userNameExist);
-
+  const SECRET = "THISISMYSECRETKEY";
   const payload = {
     _id: userNameExist._id,
   };
 
-  const token = jwt.sign(payload, "THIS_IS_MY_SECRET_KEY", {
-    expiresIn: "30d",
-    algorithm: "HS256",
+  const token = jwt.sign(payload, SECRET, {
+    expiresIn: "2 days",
   });
 
-  res.json({ token: payload, status: "200" });
+  res.json({ token: token, status: "200" });
 };

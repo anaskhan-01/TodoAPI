@@ -1,8 +1,14 @@
 import express, { Request, Response } from "express";
 import Todo from "../models/Todo";
-export const checkTitle = async (title: string) => {
+
+const checkTitle = async (title: string) => {
   let existTitle = await Todo.findOne({ title });
   return existTitle;
+};
+
+const checkTodoById = async (id: string, _id: string) => {
+  const idExist = await Todo.findOne({ userId: _id, _id: id });
+  return idExist;
 };
 
 export const add = async (req: Request, res: Response) => {
@@ -29,15 +35,19 @@ export const add = async (req: Request, res: Response) => {
   res.json({ todoResponse, status: "200" });
 };
 
-const checkTodoById = async (id: string) => {
-  const idExist = await Todo.findById(id);
-  return idExist;
+export const getAll = async (req: Request, res: Response) => {
+  const { _id } = req.body;
+
+  const todos = await Todo.find({ userId: _id });
+  res.json({ todos, status: "200" });
 };
 
 export const deleteTodo = async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  const idExist = await checkTodoById(id);
+  const { _id } = req.body;
+
+  const idExist = await checkTodoById(id, _id);
   if (!idExist) {
     res.json({ msg: "Todo not found", status: "500" });
   }
@@ -46,8 +56,8 @@ export const deleteTodo = async (req: Request, res: Response) => {
 };
 
 export const updateTodo = async (req: Request, res: Response) => {
-  const { id, title, description } = req.body;
-  const idExist = await checkTodoById(id);
+  const { id, title, description, _id } = req.body;
+  const idExist = await checkTodoById(id, _id);
   if (!idExist) {
     res.json({ msg: "Todo not found", status: "500" });
   }

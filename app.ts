@@ -22,8 +22,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post("/add", authenticateToken, TodoController.add);
-app.get("/delete/:id", TodoController.deleteTodo);
-app.post("/update", TodoController.updateTodo);
+app.get("/todo", authenticateToken, TodoController.getAll);
+app.get("/delete/:id", authenticateToken, TodoController.deleteTodo);
+app.post("/update", authenticateToken, TodoController.updateTodo);
 
 app.post("/createUser", UserController.createUser);
 app.post("/login", UserController.loginUser);
